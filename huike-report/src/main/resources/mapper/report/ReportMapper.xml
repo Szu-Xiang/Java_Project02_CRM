@@ -4,6 +4,10 @@
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.huike.report.mapper.ReportMapper">
 
+	<!--
+			首页 ———— 基础数据统计
+	-->
+
 	<select id="getCluesNum"   resultType="Integer">
 		SELECT COUNT(id) AS cluesNum  FROM `tb_clue`
 		WHERE id IN (
@@ -64,5 +68,124 @@
 		    AND DATE_FORMAT(h.create_time,'%Y-%m-%d') BETWEEN #{startTime}
 			AND #{endTime}
 	</select>
+
+
+	<!--
+			首页 ———— 今日简报
+	-->
+
+	<!--今日新增线索-->
+    <select id="getTodayClue" resultType="java.lang.Integer">
+		select count(distinct (id)) as todayCluesNum
+		from `tb_clue`
+		where id in (select assign_id from `tb_assign_record`
+		where user_name = #{username}
+		    AND DATE_FORMAT(create_time, '%Y-%m-%d') = #{now}
+			and latest = 1
+			and `type` = 0);
+	</select>
+
+	<!--今日新增商机-->
+	<select id="getTodayBusiness" resultType="java.lang.Integer">
+		select count(distinct (id)) as todayBusinessNum
+		from `tb_business`
+		where id in (select assign_id from `tb_assign_record`
+					 where user_name = #{username}
+					   AND DATE_FORMAT(create_time, '%Y-%m-%d') = #{now}
+					   and latest = 1
+					   and `type` = 1);
+	</select>
+
+	<!--今日新增客户-->
+	<select id="getTodayContract" resultType="java.lang.Integer">
+		select count(id) as todayContractNum
+		from `tb_contract`
+		where create_by = #{username}
+		and DATE_FORMAT(create_time, '%Y-%m-%d') = #{now}
+	</select>
+
+	<!--今日新增销售额-->
+	<select id="getTodaySalesAmount" resultType="java.lang.Double">
+		/*如果销售额为null，则设置为0*/
+		SELECT ifnull(  SUM(`contract_order`), 0 ) AS todaySalesAmount
+		FROM
+			`tb_contract`
+		WHERE create_by =  #{username}
+		  AND DATE_FORMAT(create_time, '%Y-%m-%d') = #{now}
+	</select>
+
+
+	<!--
+			首页 ———— 待办事项
+	-->
+
+	<select id="getToAllocatedCluesNum"   resultType="Integer">
+		SELECT COUNT(DISTINCT(id)) AS toallocatedCluesNum
+		FROM `tb_clue`
+		WHERE id NOT IN (
+			SELECT assign_id FROM `tb_assign_record`
+			WHERE
+				latest = 1 AND `type` = 0
+		)
+		  AND create_time BETWEEN #{startTime} AND #{endTime}
+	</select>
+
+	<select id="getToAllocatedBusinessNum"   resultType="Integer">
+		SELECT COUNT(DISTINCT(id)) AS toallocatedBusinessNum
+		FROM `tb_business`
+		WHERE id NOT IN (
+			SELECT assign_id FROM `tb_assign_record`
+			WHERE create_time BETWEEN #{startTime}
+				AND #{endTime}
+			  AND latest = 1
+			  AND `type` = 1
+		)
+		  AND create_time BETWEEN #{startTime}
+			AND #{endTime}
+	</select>
+
+	<select id="getToFollowedCluesNum"   resultType="Integer">
+		SELECT COUNT(DISTINCT (id)) AS tofollowedCluesNum
+		FROM `tb_clue`
+		WHERE id IN
+			  (
+				  SELECT assign_id FROM `tb_assign_record`
+				  WHERE user_name = #{username}
+					AND create_time BETWEEN #{beginTime}
+					  AND #{endTime}
+					AND latest = 1
+					AND `type` = 0
+			  )
+		  AND `status` = 1
+	</select>
+
+	<select id="getToFollowedBusinessNum"   resultType="Integer">
+		SELECT COUNT(DISTINCT(id)) AS tofollowedBusinessNum
+		FROM `tb_business`
+		WHERE id IN (
+			SELECT assign_id FROM `tb_assign_record`
+			WHERE user_name = #{username}
+			  AND create_time BETWEEN #{startTime}
+				AND #{endTime}
+			  AND latest = 1
+			  AND `type` = 1
+		)
+		  AND `status` = 1
+	</select>
+
+
+	<!--饼状图实现-->
+	<select id="subjectStatistics" resultType="com.huike.report.domain.vo.PieChartVO">
+		select dd.dict_label as subject, t1.total as num
+		from (select subject as sId, count(id) as total from tb_contract
+			  where DATE_FORMAT(create_time, '%Y-%m-%d') between #{beginCreateTime} and #{endCreateTime}
+			  group by subject)as t1
+			  left join sys_dict_data as dd on dd.dict_type = 'course_subject' and dict_value = t1.sId
+	</select>
+
+
+
+
+
 
 </mapper>

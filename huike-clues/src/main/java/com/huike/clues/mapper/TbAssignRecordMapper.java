@@ -2,12 +2,14 @@ package com.huike.clues.mapper;
 
 import java.util.List;
 import com.huike.clues.domain.TbAssignRecord;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 /**
  * 线索分配记录Mapper接口
  * @date 2021-04-19
  */
+@Mapper
 public interface TbAssignRecordMapper
 {
     /**

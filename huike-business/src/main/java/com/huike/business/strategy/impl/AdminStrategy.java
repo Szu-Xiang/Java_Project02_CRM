@@ -25,7 +25,7 @@ import java.util.List;
  * 由admin来处理所有的线索导入和转商机的数据
  *
  * 全部导入到admin 统一由admin来处理所有的线索
- * exchange 转商机的时候统一转换到admin，再由admin来统一分片商机
+ * exchange 转商机的时候统一转换到admin，再由admin来统一分配商机
  */
 @ConditionalOnProperty(name = "rule.transfor", havingValue = "admin")
 @Service("BusinessAdminStrategy")
@@ -36,7 +36,6 @@ public class AdminStrategy implements Rule {
 
     @Autowired
     private SysUserMapper userMapper;
-
 
     private static SysUser ADMIN = new SysUser();
 
@@ -51,17 +50,21 @@ public class AdminStrategy implements Rule {
      */
     @Override
     public Integer transforBusiness(TbBusiness business) {
+
         //默认分配给管理员
         TbAssignRecord tbAssignRecord =new TbAssignRecord();
         tbAssignRecord.setAssignId(business.getId());
         tbAssignRecord.setUserId(ADMIN.getUserId());
         tbAssignRecord.setUserName(ADMIN.getUserName());
+
         //这里是写死的admin所在部门的id
         SysUser admin = userMapper.selectUserByName(ADMIN.getUserName());
+
         tbAssignRecord.setDeptId(admin.getDeptId());
         tbAssignRecord.setCreateBy(SecurityUtils.getUsername());
         tbAssignRecord.setCreateTime(DateUtils.getNowDate());
         tbAssignRecord.setType(TbAssignRecord.RecordType.BUSNIESS.getValue());
+
         business.setNextTime(null);
         return assignRecordMapper.insertAssignRecord(tbAssignRecord);
     }

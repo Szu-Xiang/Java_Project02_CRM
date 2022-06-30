@@ -38,7 +38,7 @@ public class TbActivityController extends BaseController {
     /**
      * 查询活动管理列表
      */
-    @PreAuthorize("@ss.hasPermi('clues:activity:list')")
+    @PreAuthorize("@ss.hasPermi('clues:activity:list')")//资源鉴权注解
     @GetMapping("/list")
     public TableDataInfo list(TbActivity tbActivity)
     {
@@ -60,7 +60,7 @@ public class TbActivityController extends BaseController {
         TbActivity tbActivity =new TbActivity();
         tbActivity.setChannel(channel);
         tbActivity.setStatus("2");
-        return AjaxResult.success(tbActivityService.selectTbActivityList(tbActivity));
+        return AjaxResult.success(tbActivityService.selectTbActivityList2(tbActivity));
     }
 
     /**

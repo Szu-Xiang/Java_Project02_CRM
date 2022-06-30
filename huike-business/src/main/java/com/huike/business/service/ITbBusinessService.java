@@ -65,7 +65,6 @@ public interface ITbBusinessService
      */
     public int deleteTbBusinessById(Long id);
 
-
     public String assign(Long[] clueIds, Long userId);
 
     public String gain(Long[] clueIds, Long userId);

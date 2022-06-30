@@ -2,7 +2,6 @@ package com.huike.contract.service.impl;
 
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import com.huike.business.domain.TbBusiness;
 import com.huike.business.mapper.TbBusinessMapper;
@@ -12,13 +11,11 @@ import com.huike.clues.mapper.SysUserMapper;
 import com.huike.clues.mapper.TbActivityMapper;
 import com.huike.clues.mapper.TbCourseMapper;
 import com.huike.clues.service.ISysDictDataService;
-import com.huike.common.core.domain.entity.SysUser;
 import com.huike.common.core.redis.RedisCache;
 import com.huike.common.exception.CustomException;
 import com.huike.common.utils.DateUtils;
 import com.huike.common.utils.SecurityUtils;
 import com.huike.common.utils.bean.BeanUtils;
-import com.huike.contract.domain.vo.ActivityInstanceVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.huike.contract.mapper.TbContractMapper;
@@ -159,5 +156,7 @@ public class TbContractServiceImpl implements ITbContractService
             tbContract.setOrder(course.getPrice());
         }
     }
+
+
 
 }

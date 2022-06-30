@@ -9,7 +9,7 @@ public class ClueTrackRecordVo {
     /** 线索id */
     private Long clueId;
 
-    /** 意向等级 */
+    /** 意向学科 */
     private String subject;
 
     /** 跟进记录 */

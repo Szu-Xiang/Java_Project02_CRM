@@ -6,12 +6,14 @@ import java.util.Map;
 
 import com.huike.business.domain.TbBusiness;
 import com.huike.clues.domain.vo.IndexStatisticsVo;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 /**
  * 商机Mapper接口
  * @date 2021-04-25
  */
+@Mapper
 public interface TbBusinessMapper {
     /**
      * 查询商机

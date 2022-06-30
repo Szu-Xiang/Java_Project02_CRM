@@ -30,16 +30,13 @@ import java.util.List;
 @Service("BussinessruleStrategy")
 public class RuleStrategy implements Rule {
 
-    //这里能够成功注入吗？
+    //这里能够成功注入吗？  去掉static
     @Autowired
-    private static TbAssignRecordMapper assignRecordMapper;
+    private TbAssignRecordMapper assignRecordMapper;
 
-    //这里能够成功注入吗？
+    //这里能够成功注入吗？  去掉static
     @Autowired
-    private static SysUserMapper userMapper;
-
-    @Autowired
-    private static SysDictDataMapper dictDataMapper;
+    private SysUserMapper userMapper;
 
     private static SysUser lisi = new SysUser();
 
@@ -56,26 +53,44 @@ public class RuleStrategy implements Rule {
     /**
      * 参考一下adminStrategy是怎么做的
      */
-    static{
-        try{
-            //空间换时间的方式将数据库中的学科读取到内存中
-            //预加载学科数据到内存中
-            List<SysDictData> course_subject = dictDataMapper.selectDictDataByType("course_subject");
-            for (SysDictData index: course_subject) {
-                //找到java和前端两个学科对应的数值
-                if(index.getDictLabel().equals("Java")){
-                    subjectJAVA = index;
-                }
-                if(index.getDictLabel().equals("前端")){
-                    subjectHtml = index;
-                }
+    @PostConstruct
+    public void init() {
+        List<SysDictData> course_subject = DictUtils.getDictCache("course_subject");
+        for (SysDictData index: course_subject) {
+            //找到java和前端两个学科对应的数值
+            if(index.getDictLabel().equals("Java")){
+                subjectJAVA = index;
             }
-            //预加载lisi和lisi1的数据到内存中
-            lisi = userMapper.selectUserByName("lisi");
-            lisi1 = userMapper.selectUserByName("lisi1");
-        }catch (Exception e){
+            if(index.getDictLabel().equals("前端")){
+                subjectHtml = index;
+            }
+
         }
+        //预加载lisi和lisi1的数据到内存中
+        lisi = userMapper.selectUserByName("lisi");
+        lisi1 = userMapper.selectUserByName("lisi1");
     }
+
+//    static{
+//        try{
+//            //空间换时间的方式将数据库中的学科读取到内存中
+//            //预加载学科数据到内存中
+//            List<SysDictData> course_subject = dictDataMapper.selectDictDataByType("course_subject");
+//            for (SysDictData index: course_subject) {
+//                //找到java和前端两个学科对应的数值
+//                if(index.getDictLabel().equals("Java")){
+//                    subjectJAVA = index;
+//                }
+//                if(index.getDictLabel().equals("前端")){
+//                    subjectHtml = index;
+//                }
+//            }
+//            //预加载lisi和lisi1的数据到内存中
+//            lisi = userMapper.selectUserByName("lisi");
+//            lisi1 = userMapper.selectUserByName("lisi1");
+//        }catch (Exception e){
+//        }
+//    }
 
 
     /**
@@ -90,14 +105,14 @@ public class RuleStrategy implements Rule {
     @Override
     public Integer transforBusiness(TbBusiness tbBusiness) {
         //注意处理空指针的问题
-        if(tbBusiness.getSubject().equals(subjectJAVA.getDictLabel())){
+        if(subjectJAVA.getDictValue().equals(tbBusiness.getSubject())){
             //如果意向学科是java--分配给lisi
             return distribute(tbBusiness,lisi);
-        }else if(tbBusiness.getSubject().equals(subjectHtml.getDictLabel())){
+        }else if(subjectHtml.getDictValue().equals(tbBusiness.getSubject())){
             //如果意向学科是前端--分配给lisi1
             return distribute(tbBusiness,lisi1);
         }else{
-            //不进行分配，不添加分配记录-----即待分配状态
+            //不进行分配，直接添加-----即待分配状态
             return 1;
         }
     }

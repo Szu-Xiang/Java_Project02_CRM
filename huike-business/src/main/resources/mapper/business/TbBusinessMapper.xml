@@ -117,6 +117,7 @@
             <if test="planTime != null "> and plan_time = #{planTime}</if>
             <if test="otherIntention != null  and otherIntention != ''"> and other_intention = #{otherIntention}</if>
             <if test="nextTime != null "> and next_time = #{nextTime}</if>
+            <if test="beginCreateTime != null and endCreateTime != null "> and DATE_FORMAT(create_time,'%Y-%m-%d')  BETWEEN #{beginCreateTime} AND #{endCreateTime}</if>
             and status IN ('3','4')
         </where>
     </select>
@@ -149,6 +150,7 @@
             <if test="planTime != null "> and b.plan_time = #{planTime}</if>
             <if test="otherIntention != null  and otherIntention != ''"> and b.other_intention = #{otherIntention}</if>
             <if test="nextTime != null "> and b.next_time = #{nextTime}</if>
+            <if test="status != null"> and b.status = #{status}</if>
             <if test="beginCreateTime != null and endCreateTime != null "> and DATE_FORMAT(b.create_time,'%Y-%m-%d')  BETWEEN #{beginCreateTime} AND #{endCreateTime}</if>
             AND (r.latest = '1' OR r.id IS NULL)
             AND (r.type = '1' OR r.id IS NULL)

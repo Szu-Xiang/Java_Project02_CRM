@@ -62,6 +62,12 @@ public class TbActivityServiceImpl implements ITbActivityService {
         return tbActivityMapper.selectTbActivityList(tbActivity);
     }
 
+    @Override
+    public List<TbActivity> selectTbActivityList2(TbActivity tbActivity) {
+        return tbActivityMapper.selectTbActivityList2(tbActivity);
+    }
+
+
     /**
      * 新增活动管理
      * 
@@ -72,7 +78,8 @@ public class TbActivityServiceImpl implements ITbActivityService {
     @Transactional
     public int insertTbActivity(TbActivity tbActivity){
         tbActivity.setCreateTime(DateUtils.getNowDate());
-        tbActivity.setCode(getCode());
+        tbActivity.setCode(UUIDUtils.getUUID());
+        //tbActivity.setCode(getCode());
         tbActivity.setStatus("2");
         int rows= tbActivityMapper.insertTbActivity(tbActivity);
         loadAllActivityCode();

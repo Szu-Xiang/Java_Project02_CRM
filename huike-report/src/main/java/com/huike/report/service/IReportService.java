@@ -22,6 +22,7 @@ public interface IReportService {
     public LineChartVO contractStatistics(String beginCreateTime, String endCreateTime);
 
 
+
     /**
      * 客户统计报表
      * @param tbContract
@@ -107,5 +108,22 @@ public interface IReportService {
      */
     IndexBaseInfoVO getBaseInfo(String beginCreateTime, String endCreateTime);
 
+    /**
+     * 首页今日简报数据展示
+     * @param today    今日日期
+     * @return
+     */
+    IndexTodayInfoVO getTodayInfo(String today);
+
+    /**
+     * 获取待办数据
+     * @param beginCreateTime
+     * @param endCreateTime
+     * @return
+     */
+    IndexTodoInfoVO getTodoInfo(String beginCreateTime, String endCreateTime);
+
+
+    List<PieChartVO> subjectStatistics(String beginCreateTime, String endCreateTime);
 
 }

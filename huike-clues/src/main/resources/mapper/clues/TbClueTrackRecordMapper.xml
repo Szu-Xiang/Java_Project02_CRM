@@ -17,4 +17,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="nextTime"    column="next_time"    />
     </resultMap>
 
+
+    <select id="listRecord" resultType="java.lang.Integer">
+        select * from tb_clue_track_record
+    </select>
+
+
 </mapper>

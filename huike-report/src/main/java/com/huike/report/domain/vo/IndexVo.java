@@ -7,7 +7,6 @@ public class IndexVo {
     private Integer contractNum=100;  //合同数目
     private Double salesAmount=100.00;  //销售金额
 
-
     private Integer todayCluesNum=0;  //今日线索数目
     private Integer todayBusinessNum=0;  //今日商机数目
     private Integer todayContractNum=0;  //今日合同数目

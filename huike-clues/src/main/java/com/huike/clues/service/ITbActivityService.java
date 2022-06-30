@@ -31,6 +31,9 @@ public interface ITbActivityService
      */
     public List<TbActivity> selectTbActivityList(TbActivity tbActivity);
 
+    public List<TbActivity> selectTbActivityList2(TbActivity tbActivity);
+
+
     /**
      * 新增活动管理
      * 

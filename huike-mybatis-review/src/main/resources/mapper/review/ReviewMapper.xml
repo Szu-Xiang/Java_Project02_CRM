@@ -4,5 +4,35 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.huike.review.mapper.MybatisReviewMapper">
 
+    <!--getById方法返回的是Review对象，需要定义一个ResultMap来保证传回参数类型一致-->
+    <resultMap type="com.huike.review.pojo.Review" id="reviewResultMap">
+        <result column="create_by" property="createBy"/>
+        <result column="update_user" property="updateBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+
+    <insert id="saveData">
+        insert into mybatis_review (name,age,sex) values (#{name}, #{age}, #{sex})
+    </insert>
+
+    <update id="updateData">
+        update mybatis_review set name = #{name}, age = #{age}, sex = #{sex} where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from mybatis_review where id = #{id}
+    </delete>
+
+    <select id="getById" resultMap="reviewResultMap">
+        select * from mybatis_review where id = #{id}
+    </select>
+
+    <select id="getByPage" resultMap="reviewResultMap">
+        select * from mybatis_review limit #{a}, #{b}
+    </select>
+
+
 
 </mapper>

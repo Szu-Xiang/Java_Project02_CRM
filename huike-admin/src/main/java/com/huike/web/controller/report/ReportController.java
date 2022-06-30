@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.huike.report.domain.vo.LineChartVO;
+import com.huike.report.domain.vo.LineSeriesVO;
+import com.huike.report.domain.vo.PieChartVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,6 +40,22 @@ public class ReportController extends BaseController {
         return reportService.contractStatistics(beginCreateTime,endCreateTime);
     }
 
+
+    /**
+     * 统计分析--饼状图实现
+     * @param beginCreateTime   开始时间
+     * @param endCreateTime     结束时间
+     * @return
+     */
+    @GetMapping("/subjectStatistics/{beginCreateTime}/{endCreateTime}")
+    public AjaxResult subjectStatistics(@PathVariable String beginCreateTime,
+                                        @PathVariable String endCreateTime) {
+
+        return AjaxResult.success(reportService.subjectStatistics(beginCreateTime, endCreateTime));
+
+    }
+
+
     /**
      * 销售统计
      * @param beginCreateTime
@@ -45,7 +63,9 @@ public class ReportController extends BaseController {
      * @return
      */
     @GetMapping("/salesStatistics/{beginCreateTime}/{endCreateTime}")
-    public LineChartVO salesStatistics(@PathVariable String beginCreateTime, @PathVariable String endCreateTime){
+    public LineChartVO salesStatistics(@PathVariable String beginCreateTime,
+                                       @PathVariable String endCreateTime){
+
         return reportService.salesStatistics(beginCreateTime,endCreateTime);
     }
 
@@ -59,6 +79,7 @@ public class ReportController extends BaseController {
      */
     @GetMapping("/chanelStatistics/{beginCreateTime}/{endCreateTime}")
     public AjaxResult chanelStatistics(@PathVariable String beginCreateTime, @PathVariable String endCreateTime){
+
         return AjaxResult.success(reportService.chanelStatistics(beginCreateTime,endCreateTime));
     }
 

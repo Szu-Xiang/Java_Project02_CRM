@@ -12,7 +12,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+import com.huike.common.core.domain.AjaxResult;
 import com.huike.report.domain.vo.*;
+import javafx.scene.chart.PieChart;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,7 +63,10 @@ public class ReportServiceImpl implements IReportService {
     private TbAssignRecordMapper assignRecordMapper;
 
     @Autowired
-    private ReportMapper reportMpper;
+    private ReportMapper reportMapper;
+
+    @Autowired
+    private TbContractMapper tbContractMapper;
 
     @Override
     public LineChartVO contractStatistics(String beginCreateTime, String endCreateTime) {
@@ -96,8 +101,24 @@ public class ReportServiceImpl implements IReportService {
         return  lineChartVo;
     }
 
+
+    /**
+     * 饼状图实现
+     * @param beginCreateTime       开始时间
+     * @param endCreateTime         截止时间
+     * @return                      以List集合形式封装的data
+     */
+    @Override
+    public List<PieChartVO> subjectStatistics(String beginCreateTime, String endCreateTime) {
+
+        List<PieChartVO> list = reportMapper.subjectStatistics(beginCreateTime, endCreateTime);
+
+        return list;
+    }
+
     @Override
     public LineChartVO salesStatistics(String beginCreateTime, String endCreateTime) {
+
         LineChartVO lineChartVo =new LineChartVO();
         try {
             List<String> timeList= findDates(beginCreateTime,endCreateTime);
@@ -123,7 +144,6 @@ public class ReportServiceImpl implements IReportService {
         }
         return  lineChartVo;
     }
-
 
 
 
@@ -274,8 +294,7 @@ public class ReportServiceImpl implements IReportService {
      * @return
      * @throws ParseException
      */
-    public static List<String> findDates(String beginTime, String endTime)
-            throws ParseException {
+    public static List<String> findDates(String beginTime, String endTime) throws ParseException {
         List<String> allDate = new ArrayList();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -356,10 +375,10 @@ public class ReportServiceImpl implements IReportService {
         String username = SecurityUtils.getUsername();
         try {
             //3 封装结果集对象
-            result.setCluesNum(reportMpper.getCluesNum(beginCreateTime, endCreateTime, username));
-            result.setBusinessNum(reportMpper.getBusinessNum(beginCreateTime, endCreateTime, username));
-            result.setContractNum(reportMpper.getContractNum(beginCreateTime, endCreateTime, username));
-            result.setSalesAmount(reportMpper.getSalesAmount(beginCreateTime, endCreateTime, username));
+            result.setCluesNum(reportMapper.getCluesNum(beginCreateTime, endCreateTime, username));
+            result.setBusinessNum(reportMapper.getBusinessNum(beginCreateTime, endCreateTime, username));
+            result.setContractNum(reportMapper.getContractNum(beginCreateTime, endCreateTime, username));
+            result.setSalesAmount(reportMapper.getSalesAmount(beginCreateTime, endCreateTime, username));
         }catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -367,5 +386,63 @@ public class ReportServiceImpl implements IReportService {
         //4 返回结果集对象
         return result;
     }
+
+
+    /**
+     * 获取首页--今日简报数据
+     * @param today    今日日期
+     * @return
+     */
+    @Override
+    public IndexTodayInfoVO getTodayInfo(String today) {
+
+        //封装实体类
+        IndexTodayInfoVO result = new IndexTodayInfoVO();
+
+        //得到username
+        String username = SecurityUtils.getUsername();
+
+        //今日新增线索
+        result.setTodayCluesNum(reportMapper.getTodayClue(today, username));
+
+        //今日新增商机
+        result.setTodayBusinessNum(reportMapper.getTodayBusiness(today, username));
+
+        //今日新增客户
+        result.setTodayContractNum(reportMapper.getTodayContract(today, username));
+
+        //今日销售额
+        result.setTodaySalesAmount(reportMapper.getTodaySalesAmount(today, username));
+
+        return result;
+
+    }
+
+
+        /**
+         * 获取首页--今日待办事项
+         * @param beginCreateTime  开始时间
+         * @param endCreateTime    结束时间
+         * @return
+         */
+        @Override
+        public IndexTodoInfoVO getTodoInfo(String beginCreateTime, String endCreateTime) {
+
+            //2 封装结果集属性
+            IndexTodoInfoVO result = new IndexTodoInfoVO();
+
+            // 2.1 由于查询需要用到用户名 调用工具类获取用户名
+            String username = SecurityUtils.getUsername();
+
+            result.setTofollowedCluesNum(reportMapper.getToFollowedCluesNum(beginCreateTime, endCreateTime, username));
+
+            result.setTofollowedBusinessNum(reportMapper.getToFollowedBusinessNum(beginCreateTime, endCreateTime, username));
+
+            result.setToallocatedCluesNum(reportMapper.getToAllocatedCluesNum(beginCreateTime, endCreateTime, username));
+
+            result.setToallocatedBusinessNum(reportMapper.getToAllocatedBusinessNum(beginCreateTime, endCreateTime, username));
+
+            return result;
+        }
 
 }

@@ -1,6 +1,8 @@
 package com.huike.clues.mapper;
 
 import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import com.huike.common.core.domain.entity.SysDictData;
 
@@ -9,6 +11,7 @@ import com.huike.common.core.domain.entity.SysDictData;
  * 
  * 
  */
+@Mapper
 public interface SysDictDataMapper{
     /**
      * 根据条件分页查询字典数据

@@ -52,6 +52,7 @@ public class TbBusinessController extends BaseController {
         	tbBusiness.setBeginCreateTime(req.getParameter("params[beginCreateTime]"));
         	tbBusiness.setEndCreateTime(req.getParameter("params[endCreateTime]"));
         }
+
         List<TbBusiness> list = tbBusinessService.selectTbBusinessList(tbBusiness);
         return getDataTablePage(list);
     }
@@ -133,7 +134,7 @@ public class TbBusinessController extends BaseController {
     /**
      * 批量捞取
      */
-    @PreAuthorize("@ss.hasPermi('business:business:gainbussiness')")
+    @PreAuthorize("@ss.hasPermi('business:business:gain')")
     @Log(title = "批量捞取", businessType = BusinessType.UPDATE)
     @PutMapping("/gain")
     public AjaxResult gain(@RequestBody AssignmentVo assignmentVo) {

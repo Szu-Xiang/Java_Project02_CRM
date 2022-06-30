@@ -26,14 +26,18 @@
     <select id="selectTbActivityList" parameterType="TbActivity" resultMap="TbActivityResult">
         <include refid="selectTbActivityVo"/>
         <where>
-            <if test="channel != null  and channel != ''"> and channel = #{channel}</if>
+            <if test="channel != null  and channel != ''">
+            and channel = #{channel}
+            /*and (select now()) BETWEEN begin_time AND end_time*/
+            </if>
             <if test="code != null  and code != ''"> and code like concat('%', #{code}, '%')</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="info != null  and info != ''"> and info = #{info}</if>
             <if test="type != null  and type != ''"> and type = #{type}</if>
             <if test="discount != null "> and discount = #{discount}</if>
             <if test="vouchers != null "> and vouchers = #{vouchers}</if>
-            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="status != null and status != ''"> and status = #{status}
+            </if>
             <if test="params.beginCreateTime != null and params.beginCreateTime != ''"><!-- 开始创建时间 -->
                 and date_format(create_time,'%y%m%d') &gt;= date_format(#{params.beginCreateTime},'%y%m%d')
             </if>
@@ -49,6 +53,39 @@
         </where>
         ORDER BY `create_time` DESC
     </select>
+
+    <!--zhangsan 查询活动，在channel处添加对时间的判断，其他查询语句可以直接复制-->
+    <select id="selectTbActivityList2" parameterType="TbActivity" resultMap="TbActivityResult">
+        <include refid="selectTbActivityVo"/>
+        <where>
+            <if test="channel != null  and channel != ''">
+                and channel = #{channel}
+                and (select now()) between begin_time and end_time
+            </if>
+            <if test="code != null  and code != ''"> and code like concat('%', #{code}, '%')</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="info != null  and info != ''"> and info = #{info}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="discount != null "> and discount = #{discount}</if>
+            <if test="vouchers != null "> and vouchers = #{vouchers}</if>
+            <if test="status != null and status != ''"> and status = #{status}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != ''"><!-- 开始创建时间 -->
+                and date_format(create_time,'%y%m%d') &gt;= date_format(#{params.beginCreateTime},'%y%m%d')
+            </if>
+            <if test="params.endCreateTime != null and params.endCreateTime != ''"><!--  -->
+                and date_format(create_time,'%y%m%d') &lt;= date_format(#{params.endCreateTime},'%y%m%d')
+            </if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 活动开始时间 -->
+                and date_format(begin_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 活动结束时间 -->
+                and date_format(end_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+        </where>
+        ORDER BY `create_time` DESC
+    </select>
+
+
 
     <select id="selectAllCode" resultType="String">
         select code from tb_activity
@@ -120,6 +157,7 @@
             <if test="status != null  and status != ''"> and status = #{status}</if>
         </where>
     </select>
+
 
     <update id="updateTbActivity" parameterType="TbActivity">
         update tb_activity

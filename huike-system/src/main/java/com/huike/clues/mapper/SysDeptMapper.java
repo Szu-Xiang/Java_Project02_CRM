@@ -1,6 +1,8 @@
 package com.huike.clues.mapper;
 
 import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import com.huike.common.core.domain.entity.SysDept;
 
@@ -9,6 +11,7 @@ import com.huike.common.core.domain.entity.SysDept;
  * 
  * 
  */
+@Mapper
 public interface SysDeptMapper {
     /**
      * 查询部门管理数据

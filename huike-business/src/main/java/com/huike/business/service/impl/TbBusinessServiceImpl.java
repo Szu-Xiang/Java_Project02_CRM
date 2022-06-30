@@ -253,21 +253,28 @@ public class TbBusinessServiceImpl implements ITbBusinessService {
      */
     @Override
     public int changeBusiness(Long clueId) {
+
         //查询出线索对应的数据
         TbClue tbClue = tbClueMapper.selectTbClueById(clueId);
+
         //重置状态为转商机
         tbClueMapper.resetNextTimeAndStatus(clueId, TbClue.StatusType.TOBUSINESS.getValue());
+
         //构建商机对象
         TbBusiness tbBusiness = new TbBusiness();
         BeanUtils.copyProperties(tbClue, tbBusiness);
+
         tbBusiness.setStatus(TbBusiness.StatusType.UNFOLLOWED.getValue());
         tbBusiness.setClueId(clueId);
         tbBusiness.setNextTime(null);
         tbBusiness.setCreateBy(SecurityUtils.getUsername());
+
         Date now=DateUtils.getNowDate();
         tbBusiness.setCreateTime(now);
+
         //添加商机数据
         int rows = tbBusinessMapper.insertTbBusiness(tbBusiness);
+
         //基于规则来进行分配
         Integer transForBusiness = rule.transforBusiness(tbBusiness);
         if (transForBusiness != 0) {

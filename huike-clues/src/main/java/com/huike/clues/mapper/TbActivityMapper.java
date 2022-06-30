@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.huike.clues.domain.TbActivity;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -12,6 +13,7 @@ import org.apache.ibatis.annotations.Param;
  * @author wgl
  * @date 2021-04-01
  */
+@Mapper
 public interface TbActivityMapper {
     /**
      * 查询活动管理
@@ -33,6 +35,7 @@ public interface TbActivityMapper {
      */
     public List<TbActivity> selectTbActivityList(TbActivity tbActivity);
 
+    public List<TbActivity> selectTbActivityList2(TbActivity tbActivity);
 
     public List<String> selectAllCode();
 

@@ -1,6 +1,8 @@
 package com.huike.clues.mapper;
 
 import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import com.huike.common.core.domain.entity.SysUser;
 
@@ -9,6 +11,7 @@ import com.huike.common.core.domain.entity.SysUser;
  * 
  * 
  */
+@Mapper
 public interface SysUserMapper{
     /**
      * 根据条件分页查询用户列表

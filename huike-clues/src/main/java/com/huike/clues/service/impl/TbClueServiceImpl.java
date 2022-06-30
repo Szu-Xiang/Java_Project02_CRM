@@ -266,7 +266,7 @@ public class TbClueServiceImpl implements ITbClueService {
 		int assignRecords = assignRecordMapper.countAssignCluesByUser(userId);
 		if (assignRecords >= rulePool.getMaxNunmber()) {
 			throw new CustomException("分配失败！最大保有量(" + rulePool.getMaxNunmber() + ")，剩余可以分配"
-					+ (rulePool.getMaxNunmber() - assignRecords) + "条线索");
+					+ "0条线索");
 		}
 		for (int i = 0; i < clueIds.length; i++) {
 			Long clueId = clueIds[i];
@@ -292,16 +292,19 @@ public class TbClueServiceImpl implements ITbClueService {
 		boolean isBatch = clueIds.length > 1 ? true : false;
 		TbRulePool rulePool = rulePoolService.selectTbRulePoolByType(TbRulePool.RuleType.CLUES.getValue());
 		// 统计当前分配人所有线索
+		//zhangsan这里有了284条线索，远远超于最大保有量
 		int asignRecords = assignRecordMapper.countAssignCluesByUser(userId);
+
 		if (asignRecords >= rulePool.getMaxNunmber()) {
-			throw new CustomException("捞取失败！最大保有量(" + rulePool.getMaxNunmber() + ")，剩余可以捞取"+(rulePool.getMaxNunmber()-asignRecords)+"条线索");
+			throw new CustomException("捞取失败！最大保有量(" + rulePool.getMaxNunmber() + ")，剩余可以捞取0条线索");
 		}
+
 		for (int i = 0; i < clueIds.length; i++) {
 			Long clueId = clueIds[i];
 
 			// 超过最大保有量
 			if (asignRecords + i >= rulePool.getMaxNunmber()) {
-				throw new CustomException("捞取失败！保有量达到上线，最多选择" + rulePool.getMaxNunmber() + "条线索");
+				throw new CustomException("捞取失败！保有量达到上限，最多选择" + rulePool.getMaxNunmber() + "条线索");
 			}
 			// 最近捞取记录
 			TbAssignRecord assignRecord = assignRecordMapper.selectAssignRecordByAssignId(clueId,

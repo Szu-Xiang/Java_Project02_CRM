@@ -5,16 +5,19 @@ import java.util.Map;
 
 import com.huike.clues.domain.vo.IndexStatisticsVo;
 import com.huike.contract.domain.TbContract;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 /**
  * 合同Mapper接口
  * @date 2021-05-19
  */
+@Mapper
 public interface TbContractMapper {
 
 
     public TbContract selectTbContractById(Long id);
+
 
     /**
      * 查询合同列表
